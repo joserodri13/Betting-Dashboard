@@ -267,3 +267,5 @@ No es necesario configurar todo el sistema multiagente antes de comenzar a desar
 Cabecera: `Betting App` a 2rem centrada, sin subtítulo; `<title>` de pestaña eliminado.
 Interfaz solo web: `responsive` sustituido por `adaptada a web` en README y MEMORY.
 Regla: las entradas visuales del diario tienen un máximo de 5 líneas.
+
+Web fluida 2 columnas con pestañas (día/registrar/histórico/info) y balance fijo; apilado bajo 900px solo de emergencia.

@@ -6,7 +6,7 @@
 <style>
 :root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--txt:#f1f5f9;--mut:#94a3b8;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--blue:#3b82f6;--radius:14px}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--txt)}
-.wrap{max-width:640px;margin:0 auto;padding:12px 12px 60px}
+.wrap{max-width:none;width:100%;margin:0 auto;padding:12px 24px 60px}
 header{position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5;text-align:center}
 h1{font-size:2rem;margin:0;font-weight:800}h2{font-size:1rem;margin:18px 0 8px}
 .sub{color:var(--mut);font-size:.82rem}
@@ -35,6 +35,12 @@ button{cursor:pointer;border:0;border-radius:10px;padding:11px;font-weight:700;f
 #modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
 #modal .box{background:var(--card);border-radius:16px;padding:20px;width:100%;max-width:380px}
 .hide{display:none!important}
+.tabs{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.tab{flex:1;padding:10px;background:var(--card);color:var(--mut);font-weight:700;white-space:nowrap}
+.tab.active{background:var(--blue);color:#fff}
+.panel{display:none;margin-top:4px}.panel.active{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}.wrap{padding:12px 12px 60px}}
 .hora{font-size:.72rem;color:var(--mut)}
 </style>
 </head>
@@ -55,10 +61,20 @@ button{cursor:pointer;border:0;border-radius:10px;padding:11px;font-weight:700;f
 <div class="kpi"><b id="kDd">—</b><span>Drawdown</span></div>
 </div>
 
+<div class="tabs">
+<button class="tab active" data-tab="hoy">Apuestas del día</button>
+<button class="tab" data-tab="reg">Registrar</button>
+<button class="tab" data-tab="hist">Histórico</button>
+<button class="tab" data-tab="info">Información</button>
+</div>
+
+<div class="panel active" id="panel-hoy">
 <h2>Apuestas del día</h2>
 <div class="sub" id="hoyLbl"></div>
-<div id="listaHoy"></div>
+<div id="listaHoy" class="grid2"></div>
+</div>
 
+<div class="panel" id="panel-reg">
 <div class="card">
 <h2 style="margin:0">Registrar apuesta</h2>
 <label>Partido<input id="fPartido" placeholder="Ej: Real Madrid - Girona"></label>
@@ -82,10 +98,14 @@ button{cursor:pointer;border:0;border-radius:10px;padding:11px;font-weight:700;f
 <div class="card" id="preview" style="background:#0b1220"></div>
 <button class="btn" id="btnAdd">Guardar apuesta</button>
 </div>
+</div>
 
+<div class="panel" id="panel-hist">
 <h2>Histórico</h2>
-<div id="listaHist"></div>
+<div id="listaHist" class="grid2"></div>
+</div>
 
+<div class="panel" id="panel-info">
 <div class="card">
 <h2 style="margin:0">Información</h2>
 <dl class="glos">
@@ -97,6 +117,7 @@ button{cursor:pointer;border:0;border-radius:10px;padding:11px;font-weight:700;f
 <dt>Drawdown</dt><dd>Caída máxima desde un pico de la banca. Mide el peor bache sufrido.</dd>
 <dt>Cuota / xG</dt><dd>Cuota: pago de la casa. xG: goles esperados, base para estimar tu probabilidad.</dd>
 </dl>
+</div>
 </div>
 </div>
 
@@ -205,6 +226,8 @@ $('btnAdd').onclick=()=>{
 ['fProb','fCuota'].forEach(id=>$(id).addEventListener('input',preview));
 $('btnBank').onclick=()=>{const v=Number($('bankInit').value);if(!(v>0)){alert('Indica una banca válida');return;}localStorage.setItem(K_BANK,String(v));render();};
 $('btnEditBank').onclick=()=>{const v=prompt('Nueva banca inicial €:',String(getBank()||500));if(v===null)return;const n=Number(v);if(!(n>0)){alert('Valor no válido');return;}localStorage.setItem(K_BANK,String(n));render();};
+
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));t.classList.add('active');$('panel-'+t.getAttribute('data-tab')).classList.add('active');});
 
 $('fFecha').value=nowLocal();
 render();
