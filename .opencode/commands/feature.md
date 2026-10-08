@@ -1,7 +1,8 @@
 ---
-    description:
+    description: Planifica una nueva funcionalidad antes de implementarla
     agent: plan
 ---
+
 Quiero añadir esta funcionalidad $ARGUMENTS.
 
 Antes de escribir código, prepárame un plan con:
