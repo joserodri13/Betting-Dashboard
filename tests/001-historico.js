@@ -32,7 +32,7 @@ ok(esDelDia({ fecha: '2026-10-09T12:00' }, '2026-10-09') === true, 'misma fecha 
 ok(esDelDia({ fecha: '2026-10-08T12:00' }, '2026-10-09') === false, 'otra fecha no es del día');
 ok(ubicar({ estado: 'finalizada', fecha: '2026-10-01T12:00' }, '2026-10-09') === 'historico', 'finalizada va al histórico');
 ok(ubicar({ estado: 'pendiente', fecha: '2026-10-09T12:00' }, '2026-10-09') === 'dia', 'pendiente de hoy va al día');
-ok(ubicar({ estado: 'pendiente', fecha: '2026-10-08T12:00' }, '2026-10-09') === 'oculta', 'pendiente de otro día se oculta');
+ok(ubicar({ estado: 'pendiente', fecha: '2026-10-08T12:00' }, '2026-10-09') === 'historico', 'pendiente de otro día va al histórico (regla 002)');
 
 // ---- T2: validarApuesta V1-V6 (RF-5) ----
 console.log('T2 validar (RF-5)');
@@ -81,9 +81,9 @@ store['apuestas_bets'] = JSON.stringify([]); delete store['apuestas_bankroll'];
 console.log('T5 botones histórico (RF-1)');
 const hf = { id: 7, partido: 'X - Y', deporte: 'futbol', mercado: '1X2', prob: 0.6, cuota: 2, cierre: 0, stake: 10, estado: 'finalizada', resultado: 'ganada', fecha: '2026-10-09T12:00' };
 const hp = { ...hf, id: 8, estado: 'pendiente', resultado: null };
-ok(betHtml(hf, true).includes('data-edit="7"') && betHtml(hf, true).includes('data-del="7"'), 'finalizada editable muestra Editar y Eliminar');
-ok(!betHtml(hf, false).includes('data-edit'), 'finalizada no editable no muestra Editar');
-ok(!betHtml(hp, true).includes('data-edit'), 'pendiente no muestra Editar aunque editable');
+ok(betHtml(hf, 'hist').includes('data-edit="7"') && betHtml(hf, 'hist').includes('data-del="7"'), 'finalizada editable muestra Editar y Eliminar');
+ok(!betHtml(hf).includes('data-edit'), 'finalizada no editable no muestra Editar');
+ok(!betHtml(hp, 'hist').includes('data-edit'), 'pendiente no muestra Editar aunque editable');
 
 // ---- T6: modal de edición (RF-1, RF-5, RF-6) ----
 console.log('T6 modal edición');
@@ -121,7 +121,7 @@ console.log('T8 medio Kelly (RF-7)');
 store['apuestas_bets'] = JSON.stringify([]);
 store['apuestas_bankroll'] = '500';
 const hk = { id: 20, partido: 'X - Y', deporte: 'futbol', mercado: '1X2', prob: 0.6, cuota: 2, cierre: 0, stake: 10, estado: 'finalizada', resultado: 'ganada', fecha: '2026-10-09T12:00' };
-const hkh = betHtml(hk, true);
+const hkh = betHtml(hk, 'hist');
 ok(hkh.includes('50.00') && hkh.includes('100.00') && hkh.includes('Kelly'), 'tarjeta muestra sugerido 50 y referencia 100');
 $t('fProb').value = '60'; $t('fCuota').value = '2'; preview();
 ok($t('preview').innerHTML.includes('50.00') && $t('preview').innerHTML.includes('100.00'), 'previsión muestra ½ Kelly y referencia');
@@ -136,10 +136,11 @@ store['apuestas_bets'] = JSON.stringify([
 store['apuestas_bankroll'] = '500';
 render();
 ok($t('listaHoy').innerHTML.includes('Hoy Pend') && !$t('listaHoy').innerHTML.includes('Ayer Pend'), 'día muestra solo pendientes de hoy');
-ok($t('listaHist').innerHTML.includes('Ayer Fin') && !$t('listaHist').innerHTML.includes('Hoy Pend'), 'histórico solo finalizadas');
+ok($t('listaHist').innerHTML.includes('Ayer Fin') && $t('listaHist').innerHTML.includes('Ayer Pend') && !$t('listaHist').innerHTML.includes('Hoy Pend'), 'histórico con finalizadas y antiguas pendientes (regla 002)');
 const all = getBets(); const mv = aplicarEdicion(all, 31, { estado: 'pendiente', resultado: null });
 saveBets(mv.apuestas); render();
-ok(!$t('listaHist').innerHTML.includes('Ayer Fin'), 'finalizada→pendiente sale del histórico');
+ok($t('listaHist').innerHTML.includes('Ayer Fin'), 'finalizada antigua→pendiente queda en histórico a la espera de cierre');
+ok(stats().bal === 0, 'al salir del balance este vuelve a cero');
 saveBets(getBets());
 ok(JSON.stringify(getBets()) === store['apuestas_bets'], 'RF-8 persiste tras recargar');
 store['apuestas_bets'] = JSON.stringify([]); delete store['apuestas_bankroll'];

@@ -108,6 +108,7 @@ button{cursor:pointer;border:0;border-radius:10px;padding:11px;font-weight:700;f
 <div class="panel" id="panel-info">
 <div class="card">
 <h2 style="margin:0">Información</h2>
+<p class="sub">Las apuestas finalizadas se editan en el Histórico.</p>
 <dl class="glos">
 <dt>Kelly Criterion</dt><dd>Fracción de banca a apostar: f* = (cuota × p − 1) / (cuota − 1). Si es negativa, no hay ventaja y sugiere 0.</dd>
 <dt>Stake sugerido</dt><dd>Banca actual × f* × 0.5 (½ Kelly). Kelly completo como referencia.</dd>
@@ -175,10 +176,10 @@ function clv(cuota,cierre){if(!cierre||cierre<=0)return null;return (cuota/cierr
 function fechaLocal(iso){const d=new Date(iso);const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
 function hoyLocal(){return fechaLocal(new Date());}
 function esDelDia(b,hoy){try{return fechaLocal(b.fecha)===hoy;}catch(e){return false;}}
-function ubicar(b,hoy){if(b&&b.estado==='finalizada')return 'historico';if(esDelDia(b,hoy))return 'dia';return 'oculta';}
-function validarApuesta(d){const f=[];if(!d||!String(d.partido||'').trim())f.push('V1');if(!(Number(d.cuota)>1))f.push('V2');const p=Number(d.prob);if(!(p>0&&p<1))f.push('V3');if(!(Number(d.stake)>=1))f.push('V4');if(d.estado==='finalizada'&&d.resultado!=='ganada'&&d.resultado!=='perdida')f.push('V5');return f;}
+function ubicar(b,hoy){if(!b)return 'oculta';if(b.estado==='finalizada')return 'historico';if(esDelDia(b,hoy))return 'dia';return 'historico';}
+function validarApuesta(d,banca){const f=[];if(!d||!String(d.partido||'').trim())f.push('V1');if(!(Number(d.cuota)>1))f.push('V2');const p=Number(d.prob);if(!(p>0&&p<1))f.push('V3');if(!(Number(d.stake)>=1))f.push('V4');if(d.estado==='finalizada'&&d.resultado!=='ganada'&&d.resultado!=='perdida')f.push('V5');if(Number(banca)>0&&Number(d.stake)>Number(banca))f.push('V7');return f;}
 function ganancia(b){if(!b||b.estado!=='finalizada'||!b.resultado)return 0;return b.resultado==='ganada'?(b.cuota-1)*b.stake:-b.stake;}
-function aplicarEdicion(apuestas,id,cambios){const i=(apuestas||[]).findIndex(x=>String(x.id)===String(id));if(i<0)return {ok:false,error:'E2'};const merged={...apuestas[i],...cambios};const fallos=validarApuesta(merged);if(fallos.length)return {ok:false,error:'E1',fallos};const nuevas=apuestas.map((x,j)=>j===i?merged:x);return {ok:true,apuestas:nuevas};}
+function aplicarEdicion(apuestas,id,cambios,banca){const i=(apuestas||[]).findIndex(x=>String(x.id)===String(id));if(i<0)return {ok:false,error:'E2'};const merged={...apuestas[i],...cambios};const fallos=validarApuesta(merged,banca);if(fallos.length)return {ok:false,error:'E1',fallos};const nuevas=apuestas.map((x,j)=>j===i?merged:x);return {ok:true,apuestas:nuevas};}
 function eliminarApuesta(apuestas,id){const i=(apuestas||[]).findIndex(x=>String(x.id)===String(id));if(i<0)return {ok:false,error:'E2'};const nuevas=apuestas.filter((x,j)=>j!==i);const bal=nuevas.reduce((a,b)=>a+ganancia(b),0);return {ok:true,apuestas:nuevas,bal};}
 
 function recalcular(fin,bank0){const l=(fin||[]).filter(b=>b.estado==='finalizada'&&b.resultado);let bal=0,staked=0;l.forEach(b=>{bal+=ganancia(b);staked+=Number(b.stake)||0;});const banca=bank0+bal;const yld=staked>0?bal/staked*100:null;let pico=bank0,dd=0,eq=bank0;[...l].sort((a,c)=>new Date(a.fecha)-new Date(c.fecha)).forEach(b=>{eq+=ganancia(b);if(eq>pico)pico=eq;const d=pico-eq;if(d>dd)dd=d;});return {bank0,bal,banca,yld,dd};}
@@ -198,7 +199,7 @@ function badgeValue(b){
   const v=calcValue(b.prob,b.cuota);
   return v>1.05?'<span class="badge b-value">VALUE '+v.toFixed(2)+'</span>':'<span class="badge b-noval">Sin valor '+v.toFixed(2)+'</span>';
 }
-function betHtml(b,editable){
+function betHtml(b,zona){
   const s=stats();
   const k=kellyF(b.prob,b.cuota);
   const full=s.banca*k, half=full*0.5;
@@ -210,7 +211,10 @@ function betHtml(b,editable){
   if(b.estado!=='finalizada'){
     h+='<div class="actions"><button class="btn-g" data-win="'+b.id+'">Comprobar: ganada</button><button class="btn-r" data-lose="'+b.id+'">Comprobar: perdida</button></div>';
   }
-  if(editable&&b.estado==='finalizada'&&b.resultado){
+  if(zona==='hist'&&b.estado==='finalizada'&&b.resultado){
+    h+='<div class="actions"><button class="btn-s" data-edit="'+b.id+'">Editar</button><button class="btn-r" data-del="'+b.id+'">Eliminar</button></div>';
+  }
+  if(zona==='dia'&&b.estado!=='finalizada'){
     h+='<div class="actions"><button class="btn-s" data-edit="'+b.id+'">Editar</button><button class="btn-r" data-del="'+b.id+'">Eliminar</button></div>';
   }
   h+='</div>';return h;
@@ -231,12 +235,12 @@ function render(){
   $('hoyLbl').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
   const bets=getBets().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
   const delDia=bets.filter(b=>ubicar(b,hoy)==='dia'||(b.estado==='finalizada'&&esDelDia(b,hoy)));
-  $('listaHoy').innerHTML=delDia.length?delDia.map(betHtml).join(''):'<div class="sub">No hay apuestas hoy.</div>';
-  const hist=bets.filter(b=>b.estado==='finalizada').sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
-  $('listaHist').innerHTML=hist.length?hist.map(b=>betHtml(b,true)).join(''):'<div class="sub">Sin histórico todavía.</div>';
+  $('listaHoy').innerHTML=delDia.length?delDia.map(b=>betHtml(b,'dia')).join(''):'<div class="sub">No hay apuestas hoy.</div>';
+  const hist=bets.filter(b=>ubicar(b,hoy)==='historico').sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  $('listaHist').innerHTML=hist.length?hist.map(b=>betHtml(b,'hist')).join(''):'<div class="sub">Sin histórico todavía.</div>';
   document.querySelectorAll('[data-win]').forEach(el=>el.onclick=()=>resolver(el.getAttribute('data-win'),'ganada'));
   document.querySelectorAll('[data-lose]').forEach(el=>el.onclick=()=>resolver(el.getAttribute('data-lose'),'perdida'));
-  document.querySelectorAll('[data-edit]').forEach(el=>el.onclick=()=>abrirEdicion(el.getAttribute('data-edit')));
+  document.querySelectorAll('[data-edit]').forEach(el=>el.onclick=()=>abrirEdicion(el.getAttribute('data-edit'),el.closest('.panel')&&el.closest('.panel').id==='panel-hoy'?'dia':'hist'));
   document.querySelectorAll('[data-del]').forEach(el=>el.onclick=()=>pedirBorrado(el.getAttribute('data-del')));
   preview();
 }
@@ -245,22 +249,27 @@ function resolver(id,res){
   b.estado='finalizada';b.resultado=res;saveBets(bets);render();
 }
 let ultimoError='';
+let edicionZona='hist';
 function ultimoAviso(){return ultimoError;}
-const MENSAJES_V={V1:'Indica el partido.',V2:'La cuota debe ser mayor que 1.',V3:'La probabilidad debe estar entre 1 y 99.',V4:'El stake debe ser 1 o más.',V5:'Si es finalizada elige resultado.'};
+const MENSAJES_V={V1:'Indica el partido.',V2:'La cuota debe ser mayor que 1.',V3:'La probabilidad debe estar entre 1 y 99.',V4:'El stake debe ser 1 o más.',V5:'Si es finalizada elige resultado.',V7:'El stake no puede superar la banca actual.'};
 function leerEdicion(){return {partido:$('ePartido').value.trim(),deporte:$('eDeporte').value,mercado:$('eMercado').value.trim()||'1X2',prob:Number($('eProb').value)/100,cuota:Number($('eCuota').value),cierre:Number($('eCierre').value)||0,stake:Number($('eStake').value)||0,estado:$('eEstado').value,resultado:$('eEstado').value==='finalizada'?($('eRes').value||null):null,fecha:$('eFecha').value||nowLocal()};}
-function abrirEdicion(id){
+function abrirEdicion(id,zona){
   ultimoError='';const b=getBets().find(x=>String(x.id)===String(id));
   if(!b){ultimoError='Apuesta no encontrada.';alert(ultimoError);return;}
+  edicionZona=zona==='dia'?'dia':'hist';
   $('eId').value=String(b.id);$('ePartido').value=b.partido;$('eDeporte').value=b.deporte;$('eMercado').value=b.mercado;
   $('eProb').value=Math.round(b.prob*100);$('eCuota').value=b.cuota;$('eCierre').value=b.cierre||0;$('eStake').value=b.stake;
   $('eEstado').value=b.estado;$('eRes').value=b.resultado||'';$('eFecha').value=b.fecha;$('eError').textContent='';
+  $('eEstado').disabled=edicionZona==='dia';$('eFecha').disabled=edicionZona==='dia';
   $('modalEdit').classList.remove('hide');
 }
 function cerrarEdicion(){$('modalEdit').classList.add('hide');}
 function guardarEdicion(){
-  const datos=leerEdicion();const fallos=validarApuesta(datos);
+  const datos=leerEdicion();const orig=getBets().find(x=>String(x.id)===String($('eId').value));
+  if(edicionZona==='dia'&&orig){datos.estado=orig.estado;datos.fecha=orig.fecha;datos.resultado=orig.resultado;}
+  const fallos=validarApuesta(datos,getBank());
   if(fallos.length){$('eError').textContent=fallos.map(f=>MENSAJES_V[f]).join(' ');return;}
-  const r=aplicarEdicion(getBets(),$('eId').value,datos);
+  const r=aplicarEdicion(getBets(),$('eId').value,datos,getBank());
   if(!r.ok){ultimoError=r.error==='E2'?'Apuesta no encontrada.':'Revisa los datos.';$('eError').textContent=ultimoError;return;}
   try{saveBets(r.apuestas);}catch(e){ultimoError='No se pudo guardar. La apuesta queda sin modificar.';$('eError').textContent=ultimoError;return;}
   cerrarEdicion();render();
@@ -295,6 +304,9 @@ $('btnAdd').onclick=()=>{
   const partido=$('fPartido').value.trim();if(!partido){alert('Indica el partido');return;}
   const cuota=Number($('fCuota').value), prob=Number($('fProb').value)/100;
   if(!(cuota>1)||!(prob>0&&prob<1)){alert('Revisa probabilidad y cuota');return;}
+  const stakeReg=Number($('fStake').value)||0;
+  if(!(stakeReg>=1)){alert('El stake debe ser 1 o más.');return;}
+  if(stakeReg>(getBank()||0)){alert('El stake no puede superar la banca actual.');return;}
   const bets=getBets();
   bets.push({id:Date.now(),partido,deporte:$('fDeporte').value,mercado:$('fMercado').value.trim()||'1X2',prob,cuota,cierre:Number($('fCierre').value)||0,stake:Number($('fStake').value)||0,estado:$('fEstado').value,resultado:$('fEstado').value==='finalizada'?($('fRes').value||null):null,fecha:$('fFecha').value||nowLocal()});
   const last=bets[bets.length-1];
