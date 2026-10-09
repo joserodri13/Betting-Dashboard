@@ -188,6 +188,19 @@ Los estados iniciales serán:
 
 Los estados deberán diferenciarse visualmente mediante iconos y colores.
 
+### Validaciones de registro y edición (fuente única)
+
+Al registrar o editar una apuesta se aplican las mismas validaciones:
+
+* V1: partido/evento obligatorio (no vacío).
+* V2: cuota tomada > 1.
+* V3: probabilidad propia entre 1 y 99 (%).
+* V4: stake ≥ 1.
+* V5: si el estado es finalizada, el resultado (ganada/perdida) es obligatorio.
+* V6: la cuota de cierre es opcional; si está vacía, el CLV queda sin calcular.
+
+Si alguna validación falla, se rechaza el guardado y se informa del error en español.
+
 ---
 
 ## 9. Bankroll, balance y drawdown

@@ -271,3 +271,5 @@ Regla: las entradas visuales del diario tienen un máximo de 5 líneas.
 Web fluida 2 columnas con pestañas (día/registrar/histórico/info) y balance fijo; apilado bajo 900px solo de emergencia.
 
 Constitución aprobada en `docs/constitution.md`: 6 principios (stack simple, spec→código, lógica separada, tests sin dependencias, banca local, español).
+
+Spec 001 recortada a solo histórico (finalizadas): confirmación Sí/No, validaciones V1–V6 en AGENTS §8, ½ Kelly operativo absorbido en la spec, catálogo de errores E1–E3.
