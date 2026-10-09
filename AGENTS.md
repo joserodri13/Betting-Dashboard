@@ -26,8 +26,7 @@ El proyecto debe ser escalable, mantener una arquitectura sencilla y evolucionar
 * Elaborar pruebas de test para cada nueva implementación.
 * Siempre al empezar, observa el contenido de los ficheros MEMORY.md y README.md.
 * No llevar a cabo decisiones sin aprobación.
-
----
+* Lee `docs/constitution.md` y la spec activa (`specs/NNN-*/`) antes de tocar código. 
 
 ## 3. Funcionalidades del producto
 
