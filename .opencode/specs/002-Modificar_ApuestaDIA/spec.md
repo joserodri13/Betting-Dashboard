@@ -19,7 +19,7 @@ La 001 cubrió el histórico; las apuestas pendientes y en juego del día tambi�
 - RF-6: Si incumplen una validación, rechazar el guardado e indicar el error en español.
 - RF-7: Al guardar o borrar, recalcular todos los valores afectados por el cambio y repintarlos automáticamente.
 - RF-8: Conservar los cambios tras recargar.
-- RF-9: Las finalizadas de hoy visibles en el día no muestran Editar/Eliminar; un texto fijo en el apartado de información avisa de que se editan en el histórico. La apuesta no cerrada que deja de ser del día pasa al histórico a la espera de que el usuario la cierre.
+- RF-9: Cada apuesta vive en una sola lista: el día muestra solo no-finalizadas de hoy; el histórico muestra finalizadas y no cerradas de otros días. Un texto fijo en el apartado de información avisa de que las finalizadas se editan en el histórico.
 
 ## Requisitos no funcionales
 - RNF-1: Toda la operativa debe mantenerse en español y con hora local.
@@ -37,7 +37,8 @@ La 001 cubrió el histórico; las apuestas pendientes y en juego del día tambi�
 - Stake mayor que la banca actual: se rechaza (V7).
 - Borrar la única apuesta del día: la lista queda vacía sin errores.
 - Cancelar el borrado: la apuesta queda intacta.
-- Finalizada de hoy en el día: sin botones de editar/eliminar.
+- Finalizada de hoy: solo en el histórico, nunca en el día.
+- Reabierta a pendiente con fecha de hoy: solo en el día.
 - Pendiente o en juego de otro día: aparece en el histórico a la espera de cierre, con sus botones Comprobar.
 
 ## Fuera de alcance

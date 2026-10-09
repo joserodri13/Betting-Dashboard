@@ -234,7 +234,7 @@ function render(){
   const hoy=hoyLocal();
   $('hoyLbl').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
   const bets=getBets().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
-  const delDia=bets.filter(b=>ubicar(b,hoy)==='dia'||(b.estado==='finalizada'&&esDelDia(b,hoy)));
+  const delDia=bets.filter(b=>ubicar(b,hoy)==='dia');
   $('listaHoy').innerHTML=delDia.length?delDia.map(b=>betHtml(b,'dia')).join(''):'<div class="sub">No hay apuestas hoy.</div>';
   const hist=bets.filter(b=>ubicar(b,hoy)==='historico').sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
   $('listaHist').innerHTML=hist.length?hist.map(b=>betHtml(b,'hist')).join(''):'<div class="sub">Sin histórico todavía.</div>';

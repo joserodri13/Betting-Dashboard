@@ -1,6 +1,6 @@
 ---
     description: Redacta la especificación de una nueva feature
-    agent: plan
+    agent: spec-writer
 ---
 
 NO escribas código en ningún momento. Vamos a redactar la especificación de una nueva funcionalidad del Betting-Dashboard. Lee docs/constitution.md.

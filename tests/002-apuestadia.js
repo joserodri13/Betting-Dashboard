@@ -95,4 +95,17 @@ abrirEdicion('70', 'dia'); $t('eCuota').value = '4'; guardarEdicion();
 ok($t('listaHoy').innerHTML.includes('4'), 'tras editar se repinta el nuevo valor');
 store['apuestas_bets'] = JSON.stringify([]); delete store['apuestas_bankroll'];
 
+// ---- T3b: una sola lista (refinamiento RF-9) ----
+console.log('T3b una sola lista');
+const solo = [
+  { id: 43, partido: 'Hoy Fin', deporte: 'futbol', mercado: '1X2', prob: 0.5, cuota: 2, cierre: 0, stake: 10, estado: 'finalizada', resultado: 'ganada', fecha: hoyLocal() + 'T12:00' },
+  { id: 44, partido: 'Hoy Pend', deporte: 'futbol', mercado: '1X2', prob: 0.5, cuota: 2, cierre: 0, stake: 10, estado: 'pendiente', resultado: null, fecha: hoyLocal() + 'T12:00' }];
+store['apuestas_bets'] = JSON.stringify(solo);
+render();
+ok(!$t('listaHoy').innerHTML.includes('Hoy Fin') && $t('listaHist').innerHTML.includes('Hoy Fin'), 'finalizada de hoy solo en histórico');
+const re = aplicarEdicion(solo, 43, { estado: 'pendiente', resultado: null });
+saveBets(re.apuestas); render();
+ok($t('listaHoy').innerHTML.includes('Hoy Fin') && !$t('listaHist').innerHTML.includes('Hoy Fin'), 'reabierta a pendiente solo en el día');
+store['apuestas_bets'] = JSON.stringify([]);
+
 console.log('TOTAL ' + n + ' assertions OK');

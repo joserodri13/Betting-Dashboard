@@ -1,6 +1,6 @@
 ---
     description: Implementar las tareas
-    agent: build
+    agent: coordinator
 ---
 
 Implementa tarea a tarea la lista de tareas de $ARGUMENTS, siguiendo plan.md y la constitución. Escribe primero los tests, luego el código.
