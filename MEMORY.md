@@ -277,3 +277,4 @@ Spec 001 recortada a solo histórico (finalizadas): confirmación Sí/No, valida
 Convenio adoptado: cada spec cerrada genera `docs/registro/NNN-tema.md` (tope 30 líneas); MEMORY queda para lo global.
 
 Spec 001 cerrada: editar/eliminar histórico en producción, 44 tests OK, registro en `docs/registro/001-modificar-historico.md`.
+Corrección: modales de editar/eliminar ahora sí son ventanas emergentes (el CSS solo cubría #modal).
