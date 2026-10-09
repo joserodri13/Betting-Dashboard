@@ -19,6 +19,8 @@ La aplicación permitirá:
 * Diferenciar apuestas pendientes, en juego y finalizadas.
 * Consultar el estado actualizado de una apuesta.
 * Consultar el histórico de apuestas.
+* Editar apuestas finalizadas del histórico.
+* Eliminar apuestas finalizadas del histórico con confirmación.
 
 ### Dashboard financiero
 

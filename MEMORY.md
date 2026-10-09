@@ -275,3 +275,5 @@ Constitución aprobada en `docs/constitution.md`: 6 principios (stack simple, sp
 Spec 001 recortada a solo histórico (finalizadas): confirmación Sí/No, validaciones V1–V6 en AGENTS §8, ½ Kelly operativo absorbido en la spec, catálogo de errores E1–E3.
 
 Convenio adoptado: cada spec cerrada genera `docs/registro/NNN-tema.md` (tope 30 líneas); MEMORY queda para lo global.
+
+Spec 001 cerrada: editar/eliminar histórico en producción, 44 tests OK, registro en `docs/registro/001-modificar-historico.md`.
