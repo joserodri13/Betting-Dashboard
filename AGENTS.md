@@ -198,6 +198,7 @@ Al registrar o editar una apuesta se aplican las mismas validaciones:
 * V4: stake ≥ 1.
 * V5: si el estado es finalizada, el resultado (ganada/perdida) es obligatorio.
 * V6: la cuota de cierre es opcional; si está vacía, el CLV queda sin calcular.
+* V7: el stake no puede ser mayor que la banca actual.
 
 Si alguna validación falla, se rechaza el guardado y se informa del error en español.
 

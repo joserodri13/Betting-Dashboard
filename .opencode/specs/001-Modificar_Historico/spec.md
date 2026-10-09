@@ -36,6 +36,7 @@ Proyecto Betting-Dashboard: el usuario registra apuestas manualmente y puede equ
 - Eliminar la única apuesta finalizada: balance a cero, banca igual a la inicial.
 - Cambiar una finalizada a pendiente: sale del histórico y del balance hasta resolverse.
 - Stake cero o negativo al editar: se rechaza como al registrar.
+- Desde la spec 002: la pendiente o en juego de otro día aparece en el histórico a la espera de cierre.
 
 ## Fuera de alcance
 - Registro de cambios o auditoría. Deshacer tras borrar. Edición masiva. Búsqueda o filtros. Editar o borrar pendientes y en juego.

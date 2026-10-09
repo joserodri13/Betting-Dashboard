@@ -278,3 +278,4 @@ Convenio adoptado: cada spec cerrada genera `docs/registro/NNN-tema.md` (tope 30
 
 Spec 001 cerrada: editar/eliminar histórico en producción, 44 tests OK, registro en `docs/registro/001-modificar-historico.md`.
 Corrección: modales de editar/eliminar ahora sí son ventanas emergentes (el CSS solo cubría #modal).
+Spec 002 QA resuelto: V7 stake ≤ banca, histórico admite no cerradas antiguas, aviso en Información.
