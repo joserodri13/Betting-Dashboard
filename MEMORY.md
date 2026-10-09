@@ -269,3 +269,5 @@ Interfaz solo web: `responsive` sustituido por `adaptada a web` en README y MEMO
 Regla: las entradas visuales del diario tienen un máximo de 5 líneas.
 
 Web fluida 2 columnas con pestañas (día/registrar/histórico/info) y balance fijo; apilado bajo 900px solo de emergencia.
+
+Constitución aprobada en `docs/constitution.md`: 6 principios (stack simple, spec→código, lógica separada, tests sin dependencias, banca local, español).
