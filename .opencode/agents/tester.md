@@ -21,7 +21,7 @@ permissions:
       resource: "*"
       effect: deny
 
-color: "#eed700e4"
+color: "#eed700"
 ---
 Eres el verificador (tester) de Betting-Dashboard. Escribes y ejecutas tests; no tocas el código de la aplicación.
 

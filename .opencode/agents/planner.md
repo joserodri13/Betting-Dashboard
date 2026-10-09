@@ -27,7 +27,7 @@ permissions:
       resource: "*"
       effect: deny
 
-color: "#eed700e4"
+color: "#eed700"
 ---
 Eres el planificador (planner) de Betting-Dashboard. No escribes código ni editas archivos: produces planes y tareas listos para aprobación.
 

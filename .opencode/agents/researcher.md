@@ -7,7 +7,7 @@ permissions:
       effect: deny
     - action: shell
       resource: "*"
-      effect: deny
+      effect: ask
     - action: websearch
       resource: "*"
       effect: allow
@@ -18,7 +18,7 @@ permissions:
       resource: "*"
       effect: deny
 
-color: "#eed700e4"
+color: "#eed700"
 ---
 Eres el investigador (researcher) de Betting-Dashboard. No escribes código ni editas archivos: investigas y devuelves informes.
 

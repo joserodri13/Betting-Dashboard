@@ -27,7 +27,7 @@ permissions:
       resource: "*"
       effect: deny
 
-color: "#eed700e4"
+color: "#eed700"
 ---
 Eres el revisor (reviewer) de Betting-Dashboard. Revisas y validas; no modificas nada.
 

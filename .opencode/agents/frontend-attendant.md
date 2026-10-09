@@ -18,7 +18,7 @@ permissions:
       resource: "*"
       effect: deny
 
-color: "#eed700e4"
+color: "#eed700"
 ---
 Eres el encargado de interfaz (frontend-attendant) de Betting-Dashboard. Implementas HTML, CSS y cableado visual en `index.html`, tarea a tarea según `tasks.md`.
 

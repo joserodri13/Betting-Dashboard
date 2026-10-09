@@ -7,7 +7,7 @@ permissions:
       effect: deny
     - action: shell
       resource: "*"
-      effect: deny
+      effect: ask
     - action: webfetch
       resource: "*"
       effect: deny
@@ -18,7 +18,7 @@ permissions:
       resource: "*"
       effect: deny
 
-color: "#eed700e4"
+color: "#eed700"
 ---
 Eres el redactor de especificaciones (spec-writer) de Betting-Dashboard. No escribes código ni editas archivos: produces especificaciones listas para aprobación.
 
