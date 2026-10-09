@@ -280,3 +280,4 @@ Spec 001 cerrada: editar/eliminar histórico en producción, 44 tests OK, regist
 Corrección: modales de editar/eliminar ahora sí son ventanas emergentes (el CSS solo cubría #modal).
 Spec 002 QA resuelto: V7 stake ≤ banca, histórico admite no cerradas antiguas, aviso en Información.
 Regla de listas únicas: cada apuesta en una sola lista (día no-finalizadas de hoy; resto al histórico).
+Spec 002 cerrada: editar/eliminar día en producción, 23+45 tests OK, registro en `docs/registro/002-modificar-apuestadia.md`.
