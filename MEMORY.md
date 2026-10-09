@@ -273,3 +273,5 @@ Web fluida 2 columnas con pestañas (día/registrar/histórico/info) y balance f
 Constitución aprobada en `docs/constitution.md`: 6 principios (stack simple, spec→código, lógica separada, tests sin dependencias, banca local, español).
 
 Spec 001 recortada a solo histórico (finalizadas): confirmación Sí/No, validaciones V1–V6 en AGENTS §8, ½ Kelly operativo absorbido en la spec, catálogo de errores E1–E3.
+
+Convenio adoptado: cada spec cerrada genera `docs/registro/NNN-tema.md` (tope 30 líneas); MEMORY queda para lo global.

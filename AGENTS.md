@@ -335,6 +335,14 @@ Las decisiones pendientes no deben tratarse como requisitos confirmados.
 Cada entrada en este diario debe tener un máximo de 15 líneas.
 Excepción: las entradas de cambios puramente visuales tendrán un máximo de 5 líneas.
 
+### Registro por spec
+
+Cada spec cerrada genera un archivo en `docs/registro/NNN-tema.md` con plantilla fija: objetivo, cambios realizados, decisiones tomadas con su porqué, archivos tocados, verificación y pendientes heredados. Máximo 30 líneas. Solo las specs cerradas tienen registro; nada de borradores.
+
+Reparto: `MEMORY.md` para lo global e indispensable; el registro para lo concreto de esa spec; la spec y sus tareas para el detalle paso a paso; git para el cambio línea a línea. Nada se duplica: si una decisión del registro se vuelve permanente, se promociona a MEMORY y el registro la referencia sin copiarla.
+
+Lo redacta el coordinator al cerrar la spec y lo verifica el reviewer.
+
 ---
 
 ## 15. Criterios de finalización
@@ -346,6 +354,7 @@ Una tarea se considera terminada cuando:
 * Las pruebas pertinentes han sido ejecutadas.
 * Los cambios no introducen funcionalidades no solicitadas.
 * La documentación afectada está actualizada.
+* El registro de la spec está creado en `docs/registro/`, si la tarea cierra una spec.
 * Las limitaciones conocidas están documentadas.
 
 Al finalizar una tarea importante, proporcionar:
