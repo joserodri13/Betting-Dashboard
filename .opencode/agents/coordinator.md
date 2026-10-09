@@ -57,6 +57,7 @@ Los subagentes NO ven esta conversación. En cada llamada pásales todo lo que n
 - La petición original del usuario, con sus palabras, y sus decisiones.
 - Las rutas de los archivos que deben leer (constitución, spec, plan, tasks, código).
 - El resultado de la fase anterior.
+
 ## Reglas
 - Nunca te saltes una aprobación del usuario (spec, y plan con tareas).
 - No resuelvas tú las dudas: pregunta al usuario.
