@@ -27,7 +27,7 @@ La 001 cubrió el histórico; las apuestas pendientes y en juego del día tambi�
 - RNF-3: La banca, único dato privado, no debe salir del dispositivo.
 
 ## Errores (catálogo)
-- E1 validación (V1–V4): mensaje en español indicando el campo, sin guardar ni romper el resto.
+- E1 validación (V1–V4, V6 y V7): mensaje en español indicando el campo, sin guardar ni romper el resto.
 - E2 apuesta inexistente o datos corruptos: operación rechazada, resto intacto, aviso en español.
 - E3 fallo de guardado: aviso en español y apuesta sin modificar.
 
